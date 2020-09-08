@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Linq;
+
 
 namespace vscode_test
 {
@@ -17,14 +19,15 @@ namespace vscode_test
                 }
             } 
         }
+        Console.WriteLine("Best item got");
         return best.Level;
     }
     }
-
     class Program2
     {
         static void Main(string[] args)
         {
+            
             Console.WriteLine("Hello World!");
             List<Player> players = new List<Player>();
             players = CreatePlayers(1000000, players);
@@ -36,7 +39,24 @@ namespace vscode_test
             int GetHighestLevelIte = players[1].GetHighestLevelItem();
             //Console.WriteLine(GetHighestLevelItem + "yeet");
             Console.WriteLine((GetHighestLevelIte).ToString());
+            
+             ProcessEachItem(players[0], PrintItem);
+            ProcessEachItem(players[0], PrintBoio);
+        }
 
+        public static void ProcessEachItem(Player player, Action<Item> process){
+            for(int i = 0; i<player.Items.Count;i++){
+                process(player.Items[i]);
+            }
+        }
+        public Item FirstItem(Player player){
+            if(player.Items[0] != null)
+                return player.Items[0];
+            else return null;
+        }
+        public Item FirstItemWithLinq(Player player){
+            bool hasElements = player.Items.Any();
+            return hasElements ? player.Items[0] : null;
         }
 
         //GetItems: Transform the list to an array using normal C# loop to do the work and return it
@@ -49,6 +69,17 @@ namespace vscode_test
             return array;
         }
         
+        public static void PrintItem(Item item){
+            Console.WriteLine(item.Id);
+            Console.WriteLine(item.Level);
+        }
+        //Call the ProcessEachItem function (implemented in the previous exercise) with a lambda 
+        //function that does the same thing as the function in the previous excercise (so print the Id and Level to the console).
+
+        public static void PrintBoio(Item item){
+            item.Id => (Console.WriteLine(item.Id);
+            item.Level => Console.WriteLine(item.Level); 
+        }
 
         public static Guid CreateGUID(){
             Guid guid = Guid.NewGuid();
@@ -56,7 +87,7 @@ namespace vscode_test
         }
         public static List<Item> ItemCreator(List<Item> items){
             Random rand = new Random();
-            int listsize = rand.Next();
+            int listsize = rand.Next(0,4);
             for(int i = 0;i<listsize;i++){
                 Item item = new Item();
                 item.Id = CreateGUID();
@@ -64,7 +95,7 @@ namespace vscode_test
                 items.Add(item);
                 
             }
-
+            Console.WriteLine("Items created");
             return items;
         }
         
@@ -83,6 +114,7 @@ namespace vscode_test
                     else continue;
                 }
             }
+            Console.WriteLine("players created");
             return players;
         }
     }
